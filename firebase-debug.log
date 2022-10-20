@@ -1,0 +1,79 @@
+[debug] [2022-10-20T02:08:05.599Z] ----------------------------------------------------------------------
+[debug] [2022-10-20T02:08:05.599Z] Command:       /usr/local/bin/node /opt/homebrew/bin/firebase init
+[debug] [2022-10-20T02:08:05.600Z] CLI Version:   11.15.0
+[debug] [2022-10-20T02:08:05.600Z] Platform:      darwin
+[debug] [2022-10-20T02:08:05.600Z] Node Version:  v16.15.1
+[debug] [2022-10-20T02:08:05.600Z] Time:          Thu Oct 20 2022 05:08:05 GMT+0300 (Arabian Standard Time)
+[debug] [2022-10-20T02:08:05.600Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-10-20T02:08:05.603Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-10-20T02:08:05.603Z] > authorizing via signed-in user (sultanbinrazin99@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /Volumes/XTRM-Q/projects/parquet_writer
+
+Before we get started, keep in mind:
+
+  * You are currently outside your home directory
+
+[info] 
+=== Account Setup
+[info] 
+[info] Which account do you want to use for this project? Choose an account or add a new one now
+[info] 
+[debug] [2022-10-20T02:08:20.148Z] setProjectAccount(/Volumes/XTRM-Q/projects/parquet_writer, sultanbinrazin21@gmail.com)
+[info] 
+[info] ✔  Using account: sultanbinrazin21@gmail.com 
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2022-10-20T02:08:24.021Z] > refreshing access token with scopes: []
+[debug] [2022-10-20T02:08:24.024Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2022-10-20T02:08:24.024Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2022-10-20T02:08:24.353Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2022-10-20T02:08:24.353Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2022-10-20T02:08:24.378Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2022-10-20T02:08:25.058Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2022-10-20T02:08:25.058Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] i  Using project parquet-writer (Parquet Writer) 
+[info] 
+=== Hosting Setup
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 
+[info] ✔  Wrote public/404.html 
+[debug] [2022-10-20T02:08:48.715Z] >>> [apiv2][query] GET https://www.gstatic.com/firebasejs/releases.json [none]
+[debug] [2022-10-20T02:08:48.968Z] <<< [apiv2][status] GET https://www.gstatic.com/firebasejs/releases.json 200
+[debug] [2022-10-20T02:08:48.968Z] <<< [apiv2][body] GET https://www.gstatic.com/firebasejs/releases.json {"current":{"version":"9.12.1","browserURL":"https://www.gstatic.com/firebasejs/9.12.1/firebase.js","packageURL":"https://www.gstatic.com/firebasejs/9.12.1/firebase.tgz"},"live":{"version":"9.12","browserURL":"https://www.gstatic.com/firebasejs/live/9.12/firebase.js","packageURL":"https://www.gstatic.com/firebasejs/live/9.12/firebase.tgz"},"components":{"analytics":"https://www.gstatic.com/firebasejs/9.12.1/firebase-analytics.js","app":"https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js","app-check":"https://www.gstatic.com/firebasejs/9.12.1/firebase-app-check.js","auth":"https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js","auth/cordova":"https://www.gstatic.com/firebasejs/9.12.1/firebase-auth/cordova.js","auth/react-native":"https://www.gstatic.com/firebasejs/9.12.1/firebase-auth/react-native.js","functions":"https://www.gstatic.com/firebasejs/9.12.1/firebase-functions.js","firestore":"https://www.gstatic.com/firebasejs/9.12.1/firebase-firestore.js","firestore/lite":"https://www.gstatic.com/firebasejs/9.12.1/firebase-firestore/lite.js","installations":"https://www.gstatic.com/firebasejs/9.12.1/firebase-installations.js","storage":"https://www.gstatic.com/firebasejs/9.12.1/firebase-storage.js","performance":"https://www.gstatic.com/firebasejs/9.12.1/firebase-performance.js","remote-config":"https://www.gstatic.com/firebasejs/9.12.1/firebase-remote-config.js","messaging":"https://www.gstatic.com/firebasejs/9.12.1/firebase-messaging.js","messaging/sw":"https://www.gstatic.com/firebasejs/9.12.1/firebase-messaging/sw.js","database":"https://www.gstatic.com/firebasejs/9.12.1/firebase-database.js","firestore.memory":"https://www.gstatic.com/firebasejs/9.12.1/firebase-firestore.memory.js"}}
+[info] i  Skipping write of public/index.html 
+[info] 
+[info] i  Detected a .git folder at /Volumes/XTRM-Q 
+[info] i  Authorizing with GitHub to upload your service account to a GitHub repository's secrets store. 
+[info] 
+[info] Visit this URL on this device to log in:
+[info] https://github.com/login/oauth/authorize?client_id=89cf50f02ac6aaed3484&state=1024269935&redirect_uri=http%3A%2F%2Flocalhost%3A9005&scope=read%3Auser%20repo%20public_repo
+[info] 
+[info] Waiting for authentication...
+[debug] [2022-10-20T02:09:10.625Z] >>> [apiv2][query] POST https://github.com/login/oauth/access_token [none]
+[debug] [2022-10-20T02:09:10.626Z] >>> [apiv2][body] POST https://github.com/login/oauth/access_token [stream]
+[debug] [2022-10-20T02:09:11.255Z] <<< [apiv2][status] POST https://github.com/login/oauth/access_token 200
+[debug] [2022-10-20T02:09:11.256Z] <<< [apiv2][body] POST https://github.com/login/oauth/access_token {"access_token":"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","token_type":"bearer","scope":"read:user,repo"}
+[debug] [2022-10-20T02:09:11.270Z] >>> [apiv2][query] GET https://api.github.com/user [none]
+[debug] [2022-10-20T02:09:11.774Z] <<< [apiv2][status] GET https://api.github.com/user 200
+[debug] [2022-10-20T02:09:11.775Z] <<< [apiv2][body] GET https://api.github.com/user {"login":"SultanF1","id":92024243,"node_id":"U_kgDOBXwtsw","avatar_url":"https://avatars.githubusercontent.com/u/92024243?v=4","gravatar_id":"","url":"https://api.github.com/users/SultanF1","html_url":"https://github.com/SultanF1","followers_url":"https://api.github.com/users/SultanF1/followers","following_url":"https://api.github.com/users/SultanF1/following{/other_user}","gists_url":"https://api.github.com/users/SultanF1/gists{/gist_id}","starred_url":"https://api.github.com/users/SultanF1/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/SultanF1/subscriptions","organizations_url":"https://api.github.com/users/SultanF1/orgs","repos_url":"https://api.github.com/users/SultanF1/repos","events_url":"https://api.github.com/users/SultanF1/events{/privacy}","received_events_url":"https://api.github.com/users/SultanF1/received_events","type":"User","site_admin":false,"name":"SultanRazin","company":null,"blog":"","location":null,"email":null,"hireable":null,"bio":null,"twitter_username":null,"public_repos":19,"public_gists":0,"followers":0,"following":0,"created_at":"2021-10-06T09:55:43Z","updated_at":"2022-10-06T13:00:10Z","private_gists":0,"total_private_repos":1,"owned_private_repos":1,"disk_usage":17199,"collaborators":0,"two_factor_authentication":false,"plan":{"name":"pro","space":976562499,"collaborators":0,"private_repos":9999}}
+[info] 
+[info] ✔  Success! Logged into GitHub as SultanF1 
+[info] 
