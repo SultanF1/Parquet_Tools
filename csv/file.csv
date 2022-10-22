@@ -1,0 +1,6 @@
+Unnamed: 0,firstname,middlename,lastname,dob,gender,salary
+0,James ,,Smith,36636.0,M,3000
+1,Michael ,Rose,,40288.0,M,4000
+2,Robert ,,Williams,42114.0,M,4000
+3,Maria ,Anne,Jones,39192.0,F,4000
+4,Jen,Mary,Brown,,F,-1

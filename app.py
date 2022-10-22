@@ -1,5 +1,5 @@
 import json
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask import Flask, render_template, request, jsonify
 import os
 import pyspark
@@ -30,7 +30,7 @@ storage = firebase.storage()
 spark = SparkSession.builder.master("local[1]").appName('SparkByExamples.com').getOrCreate()
 
 
-app = Flask(__name__, static_folder='../build', static_url_path='/')
+app = Flask(__name__, static_folder='build', static_url_path='/')
 cors = CORS(app)
 
 def deleteFiles(folder):
@@ -190,6 +190,10 @@ def convertCsv():
     url = storage.child(name+"/written_parquet/file.parquet").get_url(token=None)
     print(url)
     return jsonify(url)
+
+@app.route("/", defaults={'path':''})
+def serve(path):
+    return send_from_directory(app.static_folder,'index.html')
 
 if __name__ == "__main__":
     app.run()
