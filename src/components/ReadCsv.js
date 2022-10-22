@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import {useLocation, useNavigate} from "react-router-dom"
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import storage from "../ firebaseConfig";
-
+import axios from "axios"
+import Navbar from "./Navbar";
 
 function ReadCsv(){
 
@@ -12,15 +13,7 @@ function ReadCsv(){
     const navigate = useNavigate();
     const [dataSource, setDataSource] = useState([])
     const [columns, setColumns] = useState([])
-    useEffect(() => {
-        fetch('getData?' + new URLSearchParams({
-            name: location.state.name,
-        })).then(res => res.json()).then(json => {
-            setDataSource(json.dataSource)
-            setColumns(json.columns)
-        })
-        
-    },[])
+    const [data, setData] = useState({})
 
        // State to store uploaded file
        const [file, setFile] = useState("");
@@ -63,46 +56,45 @@ function ReadCsv(){
                }
            );
        };
-       async function read(){
-        await fetch('getData?' + new URLSearchParams({
+    function read(){
+         axios.get('getData?' + new URLSearchParams({
             name: location.state.name,
-        })).then(res => res.json()).then(json => {
-            setDataSource(json.dataSource)
-            setColumns(json.columns)
-        })
-       }
+            onDownloadProgress: progressEvent => {
+                const total = parseFloat(progressEvent.currentTarget.responseHeaders['Content-Length'])
+                const current = progressEvent.currentTarget.response.length
+            
+                let percentCompleted = Math.floor(current / total * 100)
+                console.log('completed: ', percentCompleted)
+              }
+        })).then(res => {
+            setDataSource(...dataSource, res.data.dataSource)
+            setColumns(...columns, res.data.columns)
+            
+        })}
+    
     return (
         <>
-        <Menu mode="horizontal" defaultSelectedKeys={[location.state.page]} theme="dark" >
-        <Menu.Item key="home" onClick={() => {
-            navigate("/home", {state:{name:location.state.name,page:"home"}})
-        }}>
-          Home
-        </Menu.Item>
-        <Menu.Item key="read" onClick={() => navigate("/read", {state:{name:location.state.name,page:"read"}})}>
-          Read Parquet
-        </Menu.Item>
-
-        <Menu.Item key="writeParquet" onClick={() => navigate("/write", {state:{name:location.state.name,page:"write"}})}>
-          Write Parquet
-        </Menu.Item>
-        
-      </Menu>
+        <Navbar/>
+        <div className="head">
       <br></br>
       <Row justify="center">
         <Col span={20}>
-      <input type="file" onChange={handleChange}/>
-            <button onClick={handleUpload}>Upload to Firebase</button>
-            <p>{percent} "% done"</p>
+            <input type="file" onChange={handleChange}/>
+            <Button onClick={handleUpload}>Upload to Firebase</Button>
+            <p>{percent}% done</p>
             <br></br>
             <Button onClick={read}>Read File</Button>
       {columns.length >0 ? (
+                <>
+                <br></br><br></br>
                 <Table dataSource={dataSource} columns={columns} />
+                </>
             ): (
                 <p></p>
             )}
             </Col>
         </Row>
+      </div>
       </>
     );
 }

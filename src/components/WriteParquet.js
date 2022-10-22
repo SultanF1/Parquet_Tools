@@ -2,7 +2,7 @@ import { Col, Input, Menu, Row, InputGroup, Button } from "antd";
 import { useEffect, useState } from "react";
 import {useNavigate, useLocation} from "react-router-dom"
 import { InputNumber } from 'antd';
-import "../App.css"
+import Navbar from "./Navbar";
 
 function WriteParquet(){
     const [numColumns, setNumColumns] = useState(0)
@@ -56,21 +56,8 @@ function WriteParquet(){
     }
     return(
         <>
-        <Menu mode="horizontal" defaultSelectedKeys={[location.state.page]} theme="dark" >
-        <Menu.Item key="home" onClick={() => {
-            navigate("/home", {state:{name:location.state.name,page:"home"}})
-        }}>
-          Home
-        </Menu.Item>
-        <Menu.Item key="read" onClick={() => navigate("/read", {state:{name:location.state.name,page:"read"}})}>
-          Read Parquet
-        </Menu.Item>
-
-        <Menu.Item key="write" onClick={() => navigate("/write", {state:{name:location.state.name,page:"write"}})}>
-          Write Parquet
-        </Menu.Item>
-        
-      </Menu>
+       <Navbar/>
+       <div className="head">
       <br></br>
       <Row justify="center">
         <Col span={20}>
@@ -137,7 +124,7 @@ function WriteParquet(){
         )}
         </Col>
       </Row>
-      
+            </div>
         </>
     )
 

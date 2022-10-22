@@ -1,0 +1,18 @@
+@import '~antd/dist/antd.css';
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+.background-blue{
+    background-color: RGB(2 13 27);
+    z-index: -1;
+}
+
+.head{
+    padding-top: 1em;
+    text-align: center;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1.45em;
+}
+
+.home li{
+    font-size: 0.9em;
+}
+

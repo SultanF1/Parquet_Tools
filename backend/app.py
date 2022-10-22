@@ -57,11 +57,25 @@ def getFiles(name):
         if name.lower() in file.name.lower():
             print(file.name)
             return file.name
+def getFilesContains(name, substring):
+    for file in storage.list_files():
+        print(file.name)
+        print("--------")
+        if substring.lower() in file.name.lower():
+            print(file.name)
+            return file.name
 def getLocalFiles():
     directory = 'written_parquet'
     for filename in os.listdir(directory):
         f = os.path.join(directory, filename)
         if os.path.isfile(f) and filename.endswith('.parquet'):
+            print(filename)
+            return filename
+def getLocalFilesCsv():
+    directory = 'written_csv'
+    for filename in os.listdir(directory):
+        f = os.path.join(directory, filename)
+        if os.path.isfile(f) and filename.endswith('.csv'):
             print(filename)
             return filename
 def deleteAll(name):
@@ -70,10 +84,8 @@ def deleteAll(name):
         print("--------")
         if name.lower() in file.name.lower():
             storage.delete(file.name)
-
-    shutil.rmtree('csv', ignore_errors=True)
-    shutil.rmtree('written_parquet', ignore_errors=True)
-    shutil.rmtree('parquet', ignore_errors=True)
+    recreateLocal()
+    
 @app.route('/delete')
 def delete():
     name = request.args.get('name')
@@ -81,9 +93,8 @@ def delete():
     
 @app.route('/write')
 def add():
-    
+    shutil.rmtree('written_parquet', ignore_errors=True)    
     name = request.args.get('name')
-    deleteAll(name)
     data = json.loads(request.args.get('data'))
     data = [tuple(record) for record in data]
     columns = json.loads(request.args.get('columns'))
@@ -113,6 +124,7 @@ def get_current_time():
 def recreateLocal():
     shutil.rmtree('csv', ignore_errors=True)
     shutil.rmtree('written_parquet', ignore_errors=True)
+    shutil.rmtree('written_csv', ignore_errors=True)
     shutil.rmtree('parquet', ignore_errors=True)
     mypath = "parquet"
     if not os.path.isdir(mypath):
@@ -120,11 +132,14 @@ def recreateLocal():
     mypath = "csv"
     if not os.path.isdir(mypath):
         os.makedirs(mypath)
+    mypath = "written_csv"
+    if not os.path.isdir(mypath):
+        os.makedirs(mypath)
     mypath = "written_parquet"
     if not os.path.isdir(mypath):
         os.makedirs(mypath)
 
-@app.route('/getData', methods=['GET'])
+@app.route('/getData')
 def get():
     name = request.args.get('name')
     recreateLocal()
@@ -167,3 +182,20 @@ def get():
     return json.dumps(result)
 
 
+@app.route('/convertcsv')
+def convertCsv():
+    recreateLocal()
+    name = request.args.get('name')
+    print("name", name)
+    path = getFilesContains(name,name+"/csv/")
+    storage.child(path).download('written_csv/file.csv')
+    df = pd.read_csv('written_csv/file.csv')
+    df.to_parquet('written_parquet/file.parquet')
+    parquet_file = getLocalFiles()
+    storage.child(name+"/written_parquet/file.parquet").put("written_parquet/"+parquet_file)
+    url = storage.child(name+"/written_parquet/file.parquet").get_url(token=None)
+    print(url)
+    return jsonify(url)
+
+if __name__ == "__main__":
+    app.run()
