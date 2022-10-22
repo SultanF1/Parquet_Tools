@@ -12,7 +12,7 @@ from fastparquet import ParquetFile
 import pyrebase
 from flask_cors import CORS
 from regex import P
-from parquet_tools.utility import download, downloadToParquet, upload
+from utility import download, downloadToParquet, upload
 
 config = {
   "apiKey": "AIzaSyDo_3XAnj8RI04RsDwHHfN-z0Q3IZA-bCk",
