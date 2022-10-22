@@ -1,10 +1,7 @@
 import json
-from re import S
-# import re
 from flask import Flask
 from flask import Flask, render_template, request, jsonify
 import os
-from matplotlib.font_manager import json_dump
 import pyspark
 import pandas as pd
 from pyspark.sql.functions import *
@@ -12,6 +9,7 @@ from pyspark.sql import SparkSession
 import shutil
 from fastparquet import ParquetFile
 import pyrebase
+from flask_cors import CORS
 from regex import P
 
 config = {
@@ -33,6 +31,7 @@ spark = SparkSession.builder.master("local[1]").appName('SparkByExamples.com').g
 
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
+cors = CORS(app)
 
 def deleteFiles(folder):
     for filename in os.listdir(folder):
