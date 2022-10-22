@@ -1,4 +1,5 @@
 import json
+import re
 from flask import Flask, send_from_directory
 from flask import Flask, render_template, request, jsonify
 import os
@@ -11,6 +12,7 @@ from fastparquet import ParquetFile
 import pyrebase
 from flask_cors import CORS
 from regex import P
+from parquet_tools.utility import download, downloadToParquet, upload
 
 config = {
   "apiKey": "AIzaSyDo_3XAnj8RI04RsDwHHfN-z0Q3IZA-bCk",
@@ -77,13 +79,15 @@ def deleteAll(name):
         print(file.name)
         print("--------")
         if name.lower() in file.name.lower():
-            storage.delete(file.name)
+            storage.delete(file.name, token=None)
     recreateLocal()
     
 @app.route('/delete')
 def delete():
     name = request.args.get('name')
     deleteAll(name)
+    print(name)
+    return "deleted"
     
 @app.route('/write')
 def add():
@@ -102,17 +106,6 @@ def add():
     print(url)
     return jsonify(url)
 
-@app.route('/read')
-def get_current_time():
-    # df = pd.read_parquet('../tmp/out/people.parquet')
-    # df.to_csv('../tmp/out/people.csv')
-    pf = ParquetFile("parquet/file.parquet")
-
-    # Converting data in to pandas dataFrame
-    dataFrame = pf.to_pandas()
-
-    # Converting to CSV
-    dataFrame.to_csv("csv/file.csv", index = False)
 
 
 def recreateLocal():
@@ -137,18 +130,11 @@ def recreateLocal():
 def get():
     name = request.args.get('name')
     recreateLocal()
-    path = getFiles(name)
-    print('path is 23', path)
-    print('tt', storage.child(path))
-    storage.child(path).download(path="parquet_tools/parquet",filename="file.parquet")
+    path = getFilesContains(name, name+'/parquet/')
+    downloadToParquet(path)
     pf = ParquetFile("parquet/file.parquet")
-
-    # Converting data in to pandas dataFrame
     dataFrame = pf.to_pandas()
-
-    # Converting to CSV
     dataFrame.to_csv("csv/file.csv", index = False)
-
     df = pd.read_csv('csv/file.csv')
     columns = df.columns
     dataSource = []
@@ -176,25 +162,23 @@ def get():
     
     print(json.dumps(result))
     return json.dumps(result)
+    
+
 
 
 @app.route('/convertcsv')
 def convertCsv():
     recreateLocal()
-    print('ssokfoisj')
     name = request.args.get('name')
-    print("name", name)
     path = getFilesContains(name,name+"/csv/")
-    storage.child(path).download("written_csv/","file.csv")
-    # df = pd.read_csv('written_csv/file.csv')
-    # df.to_parquet('written_parquet/file.parquet')
-    # parquet_file = getLocalFiles()
-    # print('hey')
-    # storage.child(name+"/written_parquet/file.parquet").put("/written_parquet/"+parquet_file)
-    # url = storage.child(name+"/written_parquet/file.parquet").get_url(token=None)
-    # print(url)
-    # return jsonify(url)
-    return "hey"
+    download(path)
+    df = pd.read_csv('written_csv/file.csv')
+    df.to_parquet('written_parquet/file.parquet')
+    parquet_file = getLocalFiles()
+    storage.child(name+"/written_parquet/file.parquet").put("written_parquet/"+parquet_file)
+    url = storage.child(name+"/written_parquet/file.parquet").get_url(token=None)
+    print(url)
+    return jsonify(url)
 
 @app.route("/", defaults={'path':''})
 def serve(path):
