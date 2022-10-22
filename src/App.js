@@ -9,7 +9,9 @@ import WriteParquet from "./components/WriteParquet";
 
 function App() {
 
-  
+  useEffect(() => {
+    document.title = "Parquet Tools"
+  }, [])
   return (
     <div className="bg">
       
