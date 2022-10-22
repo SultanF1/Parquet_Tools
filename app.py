@@ -138,7 +138,9 @@ def get():
     name = request.args.get('name')
     recreateLocal()
     path = getFiles(name)
-    storage.child(path).download("parquet/file.parquet")
+    print('path is 23', path)
+    print('tt', storage.child(path))
+    storage.child(path).download(path="parquet_tools/parquet",filename="file.parquet")
     pf = ParquetFile("parquet/file.parquet")
 
     # Converting data in to pandas dataFrame
@@ -179,17 +181,20 @@ def get():
 @app.route('/convertcsv')
 def convertCsv():
     recreateLocal()
+    print('ssokfoisj')
     name = request.args.get('name')
     print("name", name)
     path = getFilesContains(name,name+"/csv/")
-    storage.child(path).download('written_csv/file.csv')
-    df = pd.read_csv('written_csv/file.csv')
-    df.to_parquet('written_parquet/file.parquet')
-    parquet_file = getLocalFiles()
-    storage.child(name+"/written_parquet/file.parquet").put("written_parquet/"+parquet_file)
-    url = storage.child(name+"/written_parquet/file.parquet").get_url(token=None)
-    print(url)
-    return jsonify(url)
+    storage.child(path).download("written_csv/","file.csv")
+    # df = pd.read_csv('written_csv/file.csv')
+    # df.to_parquet('written_parquet/file.parquet')
+    # parquet_file = getLocalFiles()
+    # print('hey')
+    # storage.child(name+"/written_parquet/file.parquet").put("/written_parquet/"+parquet_file)
+    # url = storage.child(name+"/written_parquet/file.parquet").get_url(token=None)
+    # print(url)
+    # return jsonify(url)
+    return "hey"
 
 @app.route("/", defaults={'path':''})
 def serve(path):
