@@ -14,7 +14,7 @@ function ReadCsv(){
     const [dataSource, setDataSource] = useState([])
     const [columns, setColumns] = useState([])
     const [data, setData] = useState({})
-
+    const [fail, setFail] = useState(false)
        // State to store uploaded file
        const [file, setFile] = useState("");
  
@@ -62,25 +62,35 @@ function ReadCsv(){
             onDownloadProgress: progressEvent => {
                 const total = parseFloat(progressEvent.currentTarget.responseHeaders['Content-Length'])
                 const current = progressEvent.currentTarget.response.length
-            
                 let percentCompleted = Math.floor(current / total * 100)
                 console.log('completed: ', percentCompleted)
               }
         })).then(res => {
             setDataSource(...dataSource, res.data.dataSource)
             setColumns(...columns, res.data.columns)
-            
+            console.log(res.status)
+            if (res.status !== 200){
+                setFail(true)
+            } 
         })}
     
     return (
         <>
         <Navbar/>
         <div className="head">
+        <h3>This function allows you to read a parquet file in a table format.</h3>
+            <or>
+                <li>The memory available is limited, this function is meant for testing</li>
+                <li>The security side of the application is not tested, refer from uploading classified files</li>
+                <li>Make sure that the file uploaded ends with .parquet</li>
+            </or>
       <br></br>
       <Row justify="center">
         <Col span={20}>
+            
+            <br></br><br></br>
             <input type="file" onChange={handleChange}/>
-            <Button onClick={handleUpload}>Upload to Firebase</Button>
+            <Button onClick={handleUpload}>Upload The File</Button>
             <p>{percent}% done</p>
             <br></br>
             <Button onClick={read}>Read File</Button>
@@ -92,6 +102,12 @@ function ReadCsv(){
             ): (
                 <p></p>
             )}
+        {fail ? (
+            <p>Faced an issue, try again</p>
+        ):
+        (
+            <p></p>
+        )}
             </Col>
         </Row>
       </div>

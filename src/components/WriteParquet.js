@@ -14,6 +14,7 @@ function WriteParquet(){
     const [data, setData] = useState([])
     const [url, setUrl] = useState("")
     const location = useLocation()
+    const [fail, setFail] = useState(false)
     const navigate = useNavigate()
     const onChange = (value) => {
         setNumColumns(value)
@@ -47,17 +48,24 @@ function WriteParquet(){
             name: location.state.name,
             data: JSON.stringify(data),
             columns: JSON.stringify(columnNames),
-        })).then(res => res.json()).then(json => {
-            console.log(json)
+        })).then(res => {
+            if (res.status!==200){
+                setFail(true)
+            }
+            return res.json()
+        }).then(json => {
             setUrl(json)
+            
         })
-        console.log(url)
-        console.log("first")
+        
+        
     }
     return(
         <>
        <Navbar/>
        <div className="head">
+       <h3>This function creates a new custom parquet file</h3>
+        <p>Please follow the instructions</p>
       <br></br>
       <Row justify="center">
         <Col span={20}>
@@ -120,6 +128,12 @@ function WriteParquet(){
         {url ? (
             <Button href={url}>Download Parquet File</Button>
         ): (
+            <p></p>
+        )}
+        {fail ? (
+            <p>Faced an issue, try again</p>
+        ):
+        (
             <p></p>
         )}
         </Col>

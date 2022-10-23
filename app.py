@@ -91,20 +91,24 @@ def delete():
     
 @app.route('/write')
 def add():
-    shutil.rmtree('written_parquet', ignore_errors=True)    
-    name = request.args.get('name')
-    data = json.loads(request.args.get('data'))
-    data = [tuple(record) for record in data]
-    columns = json.loads(request.args.get('columns'))
-    print(columns)
-    print(data)
-    df= spark.createDataFrame(data,columns)
-    df.write.parquet("written_parquet")
-    parquet_file = getLocalFiles()
-    storage.child(name+"/written_parquet/file.parquet").put("written_parquet/"+parquet_file)
-    url = storage.child(name+"/written_parquet/file.parquet").get_url(token=None)
-    print(url)
-    return jsonify(url)
+    try:
+        shutil.rmtree('written_parquet', ignore_errors=True)    
+        name = request.args.get('name')
+        data = json.loads(request.args.get('data'))
+        data = [tuple(record) for record in data]
+        columns = json.loads(request.args.get('columns'))
+        print(columns)
+        print(data)
+        df= spark.createDataFrame(data,columns)
+        df.write.parquet("written_parquet")
+        parquet_file = getLocalFiles()
+        storage.child(name+"/written_parquet/file.parquet").put("written_parquet/"+parquet_file)
+        url = storage.child(name+"/written_parquet/file.parquet").get_url(token=None)
+        print(url)
+        return jsonify(url)
+    except:
+        return "Error", 500
+
 
 
 
@@ -128,57 +132,63 @@ def recreateLocal():
 
 @app.route('/getData')
 def get():
-    name = request.args.get('name')
-    recreateLocal()
-    path = getFilesContains(name, name+'/parquet/')
-    downloadToParquet(path)
-    pf = ParquetFile("parquet/file.parquet")
-    dataFrame = pf.to_pandas()
-    dataFrame.to_csv("csv/file.csv", index = False)
-    df = pd.read_csv('csv/file.csv')
-    columns = df.columns
-    dataSource = []
-    for (idx, row) in df.iterrows():
-        c = {}
+    try:
+        name = request.args.get('name')
+        recreateLocal()
+        path = getFilesContains(name, name+'/parquet/')
+        downloadToParquet(path)
+        pf = ParquetFile("parquet/file.parquet")
+        dataFrame = pf.to_pandas()
+        dataFrame.to_csv("csv/file.csv", index = False)
+        df = pd.read_csv('csv/file.csv')
+        columns = df.columns
+        dataSource = []
+        for (idx, row) in df.iterrows():
+            c = {}
+            for column in columns:
+                print(type(row.loc[column]))
+                if type(row.loc[column]) == float and pd.isna(row.loc[column]):
+                    c[column] = "Nan"
+                else:
+                    c[column] = row.loc[column]
+                print(c[column])
+            dataSource.append(c)
+        antDColumns = []
         for column in columns:
-            print(type(row.loc[column]))
-            if type(row.loc[column]) == float and pd.isna(row.loc[column]):
-                c[column] = "Nan"
-            else:
-                c[column] = row.loc[column]
-            print(c[column])
-        dataSource.append(c)
-    antDColumns = []
-    for column in columns:
-        c= {}
-        c['title'] = column
-        c['dataIndex'] = column
-        c['key']= column
-        antDColumns.append(c)
-    result = {
-        "dataSource": dataSource,
-        "columns": antDColumns
-    }
-    
-    print(json.dumps(result))
-    return json.dumps(result)
+            c= {}
+            c['title'] = column
+            c['dataIndex'] = column
+            c['key']= column
+            antDColumns.append(c)
+        result = {
+            "dataSource": dataSource,
+            "columns": antDColumns
+        }
+        
+        print(json.dumps(result))
+        return json.dumps(result)
+    except:
+        return "Error", 500
     
 
 
 
 @app.route('/convertcsv')
 def convertCsv():
-    recreateLocal()
-    name = request.args.get('name')
-    path = getFilesContains(name,name+"/csv/")
-    download(path)
-    df = pd.read_csv('written_csv/file.csv')
-    df.to_parquet('written_parquet/file.parquet')
-    parquet_file = getLocalFiles()
-    storage.child(name+"/written_parquet/file.parquet").put("written_parquet/"+parquet_file)
-    url = storage.child(name+"/written_parquet/file.parquet").get_url(token=None)
-    print(url)
-    return jsonify(url)
+    try:
+        recreateLocal()
+        name = request.args.get('name')
+        path = getFilesContains(name,name+"/csv/")
+        download(path)
+        df = pd.read_csv('written_csv/file.csv')
+        df.to_parquet('written_parquet/file.parquet')
+        parquet_file = getLocalFiles()
+        storage.child(name+"/written_parquet/file.parquet").put("written_parquet/"+parquet_file)
+        url = storage.child(name+"/written_parquet/file.parquet").get_url(token=None)
+        print(url)
+        return jsonify(url)
+    except:
+        return "Error", 500
 
 @app.route("/", defaults={'path':''})
 def serve(path):

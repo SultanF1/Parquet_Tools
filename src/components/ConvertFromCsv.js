@@ -13,7 +13,7 @@ function ConvertFromCsv(){
 
     // State to store uploaded file
     const [file, setFile] = useState("");
-
+    const [fail, setFail] = useState(false)
     // progress
     const [percent, setPercent] = useState(0);
 
@@ -56,7 +56,12 @@ function ConvertFromCsv(){
     async function convert(){
     await fetch('convertcsv?' + new URLSearchParams({
         name: location.state.name,
-    })).then(res => res.json()).then(json => {
+    })).then(res => {
+        if (res.status !==200){
+            setFail(true)
+        }
+        return res.json()
+    }).then(json => {
         setUrl(json)
     })
     
@@ -64,10 +69,16 @@ function ConvertFromCsv(){
     return (
         <>
         <Navbar/>
-        <br></br>
         <Row justify="center">
         <Col span={20}>
         <div className="head">
+        <h3>This function converts a csv file to parquet.</h3>
+        <or>
+                <li>The memory available is limited, this function is meant for testing</li>
+                <li>The security side of the application is not tested, refer from uploading classified files</li>
+                <li>Make sure that the file uploaded ends with .csv</li>
+            </or>
+        <br></br><br></br>
         <input type="file" onChange={handleChange}/>
             <Button onClick={handleUpload}>Upload The File</Button>
             <p>{percent}% done</p>
@@ -76,6 +87,12 @@ function ConvertFromCsv(){
             {url ? (
             <Button href={url}>Download Parquet File</Button>
         ): (
+            <p></p>
+        )}
+         {fail ? (
+            <p>Faced an issue, try again</p>
+        ):
+        (
             <p></p>
         )}
         </div>
